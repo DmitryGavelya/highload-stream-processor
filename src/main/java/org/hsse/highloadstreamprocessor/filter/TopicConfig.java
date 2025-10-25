@@ -23,6 +23,11 @@ public class TopicConfig {
   }
 
   @Bean
+  public NewTopic topicToFilter() {
+    return new NewTopic("source", 1, (short) 1);
+  }
+
+  @Bean
   public NewTopic filteredTopic() {
     return new NewTopic("filtered", 1, (short) 1);
   }

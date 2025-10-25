@@ -15,7 +15,7 @@ public class SourceConsumer {
   private final FilterService filterService;
   private final ObjectMapper objectMapper;
 
-  @KafkaListener(topics = {"{${filter.listen-to}"})
+  @KafkaListener(topics = {"${filter.listen-to}"})
   public void consumeMessage(String message) throws JsonProcessingException {
     HashMap<String, Object> parsedMessage = objectMapper.readValue(message, new TypeReference<>() {
     });
