@@ -1,15 +1,30 @@
 spring:
   application.name: Highload Stream Proccessor
-  jpa:
-    show_sql: true
-    properties.hibernate.format_sql: true
-    hibernate.ddl-auto: validate
+
+  data:
+    mongodb:
+      uri: mongodb://mongo:development_password@localhost:27017/enrichment?authSource=admin
+      host: ${SPRING_DATA_MONGODB_HOST:enrichment-db}
+      port: ${SPRING_DATA_MONGODB_PORT:27017}
+      database: ${SPRING_DATA_MONGODB_DATABASE:enrichment}
+      username: ${SPRING_DATA_MONGODB_USERNAME:mongo}
+      password: ${SPRING_DATA_MONGODB_PASSWORD:development_password}
+      authentication-database: ${SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE:admin}
+
   kafka:
     consumer:
-      group-id: filter_service
+      group-id: enrichment_service
       enable-auto-commit: true
+
     admin.auto-create: true
 
 filter:
   listen-to: source
   send-to: filtered
+
+mongock:
+  migration-scan-package: org.hsse.highloadstreamprocessor.enrichment.migration
+  enabled: true
+
+server:
+  port: 8080

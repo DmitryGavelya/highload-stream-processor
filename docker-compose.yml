@@ -1,27 +1,38 @@
 services:
   app:
-    build: .
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: development_password
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:development_password@enrichment-db:27017/enrichment?authSource=admin
+      SPRING_DATA_MONGODB_HOST: enrichment-db
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: enrichment
+      SPRING_DATA_MONGODB_USERNAME: mongo
+      SPRING_DATA_MONGODB_PASSWORD: development_password
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - kafka
-      - db
+      - enrichment-db
     networks:
-      - filter-network
+      - enrichment-network
 
-  db:
-    image: postgres:17.6
+  enrichment-db:
+    image: mongo:4.4 # У вас может не работать, придется подбирать иную версию MongoDB
     ports:
-      - '5432:5432'
+      - '27017:27017'
     environment:
-      POSTGRES_PASSWORD: 'development_password'
-      POSTGRES_USER: 'postgres'
-      POSTGRES_DB: filter
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: development_password
+      MONGO_INITDB_DATABASE: enrichment
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
-      - filter-network
+      - enrichment-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
@@ -29,7 +40,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - filter-network
+      - enrichment-network
 
   kafka:
     image: confluentinc/cp-kafka:7.0.1
@@ -47,8 +58,11 @@ services:
       KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
     networks:
-      - filter-network
+      - enrichment-network
 
 networks:
-  filter-network:
+  enrichment-network:
     driver: bridge
+
+volumes:
+  mongodb_data:
