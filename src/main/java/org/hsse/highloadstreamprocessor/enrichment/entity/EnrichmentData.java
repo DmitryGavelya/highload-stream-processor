@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -23,6 +24,7 @@ public class EnrichmentData {
     private String originalId;
 
     @Field("query_value")
+    @Unique
     private String queryValue;
 
     @Field("created_at")

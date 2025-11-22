@@ -12,15 +12,31 @@ spring:
       authentication-database: ${SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE:admin}
 
   kafka:
+    admin:
+      fail-fast: false
+
     consumer:
       group-id: enrichment_service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       enable-auto-commit: true
 
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+
     admin.auto-create: true
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
 
 filter:
   listen-to: source
   send-to: filtered
+
+enrichment:
+  listen-to: enrichment-source
+  send-to: enrichment-data
 
 mongock:
   migration-scan-package: org.hsse.highloadstreamprocessor.enrichment.migration

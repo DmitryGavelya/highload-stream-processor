@@ -1,5 +1,9 @@
 package org.hsse.highloadstreamprocessor.enrichment.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.hsse.highloadstreamprocessor.enrichment.entity.EnrichmentData;
 import org.hsse.highloadstreamprocessor.enrichment.exception.NoEnrichmentDataException;
 import org.hsse.highloadstreamprocessor.enrichment.service.EnrichmentService;
@@ -7,14 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/enrichment")
+@RequiredArgsConstructor
 public class EnrichmentController {
 
     @Autowired
     private EnrichmentService enrichmentService;
+
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
     public ResponseEntity<String> getById(@PathVariable("id") String originId) {
@@ -22,6 +30,19 @@ public class EnrichmentController {
             return ResponseEntity.ok(enrichmentService.getEnrichmentData(originId));
         } catch (NoEnrichmentDataException e) {
             return ResponseEntity.notFound().header("Bad request").build();
+        }
+    }
+
+    @GetMapping("/enrich_data")
+    public ResponseEntity<String> enrichData(@RequestBody String jsonData) {
+        try {
+            Map<String, Object> dataToEnrich = objectMapper.readValue(jsonData, new TypeReference<>() {});
+            enrichmentService.processMessage(dataToEnrich);
+            return ResponseEntity.ok("Successfully enriched!");
+        } catch (NoEnrichmentDataException e) {
+            return ResponseEntity.notFound().header("Bad request").build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 

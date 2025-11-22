@@ -18,7 +18,7 @@ public class CreateInitialCollectionsMigration {
         }
 
         IndexOperations indexOperations = mongoTemplate.indexOps("enrichment");
-        indexOperations.createIndex(new Index().on("query_value", Direction.ASC));
+        indexOperations.createIndex(new Index().on("query_value", Direction.ASC).unique());
         indexOperations.createIndex(new Index().on("created_at", Direction.DESC));
         indexOperations.createIndex(new Index().on("status", Direction.ASC));
     }

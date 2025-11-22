@@ -14,6 +14,8 @@ public interface EnrichmentRepository extends MongoRepository<EnrichmentData, St
 
     boolean existsByOriginalId(String originalId);
 
+    boolean existsByQueryValue(String queryValue);
+
     List<EnrichmentData> findByStatus(String status);
 
     List<EnrichmentData> findByQueryValue(String queryValue);
