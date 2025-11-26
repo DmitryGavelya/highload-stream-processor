@@ -1,8 +1,9 @@
 package org.hsse.controller.deduplication;
 
 import lombok.RequiredArgsConstructor;
-import org.hsse.dto.DeduplicationConfigDto;
-import org.hsse.service.DeduplicationService;
+import org.hsse.dto.DeduplicationRequestDto;
+import org.hsse.dto.DeduplicationRequestsDto;
+import org.hsse.service.deduplication.DeduplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/deduplication")
 @RequiredArgsConstructor
-public class DeduplicationColumnController {
+public class DeduplicationController {
 
   private final DeduplicationService deduplicationService;
 
@@ -20,6 +21,15 @@ public class DeduplicationColumnController {
       @PathVariable String columnName) {
 
     deduplicationService.addDeduplicationColumn(userId, columnName);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/{userId}/columns/batch")
+  public ResponseEntity<Void> addColumns(
+      @PathVariable String userId,
+      @RequestBody DeduplicationRequestsDto request) {
+
+    deduplicationService.addDeduplicationColumns(userId, request.getColumns());
     return ResponseEntity.ok().build();
   }
 
@@ -33,9 +43,9 @@ public class DeduplicationColumnController {
   }
 
   @GetMapping("/{userId}/columns")
-  public ResponseEntity<DeduplicationConfigDto> getColumns(@PathVariable String userId) {
+  public ResponseEntity<DeduplicationRequestDto> getColumns(@PathVariable String userId) {
     List<String> columns = deduplicationService.getDeduplicationColumns(userId);
-    DeduplicationConfigDto config = new DeduplicationConfigDto(userId, columns);
+    DeduplicationRequestDto config = new DeduplicationRequestDto(userId, columns);
     return ResponseEntity.ok(config);
   }
 

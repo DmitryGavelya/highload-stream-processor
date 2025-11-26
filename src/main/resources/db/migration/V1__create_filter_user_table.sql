@@ -1,6 +1,7 @@
 CREATE TABLE user_filters (
-                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                              user_id VARCHAR(255) NOT NULL UNIQUE,
+                              id BIGSERIAL PRIMARY KEY,
+                              user_id VARCHAR(255) NOT NULL,
+                              filter_name VARCHAR(255) NOT NULL,
                               field VARCHAR(255) NOT NULL,
                               operator VARCHAR(50) NOT NULL,
                               value VARCHAR(255)

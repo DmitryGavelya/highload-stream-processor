@@ -17,9 +17,6 @@ public class UserFilter {
   @Column(name = "user_id", nullable = false)
   private String userId;
 
-  @Column(name = "filter_name", nullable = false)
-  private String filterName;
-
   @Column(name = "field", nullable = false)
   private String field;
 

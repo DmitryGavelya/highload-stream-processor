@@ -1,5 +1,28 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/manager
+    username: postgres
+    password: development_password
+
   jpa:
-    show_sql: true
-    properties.hibernate.format_sql: true
-    hibernate.ddl-auto: validate
+    hibernate:
+      ddl-auto: create-drop  # Проверяем, что схема соответствует Entity
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: true  # Автоматически создает baseline для существующих БД
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.flywaydb: DEBUG  # Добавляем логирование Flyway для отладки

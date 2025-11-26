@@ -6,13 +6,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class DeduplicationConfigDto {
+public class DeduplicationRequestDto {
   private String userId;
   private List<String> columns;
 
-  public DeduplicationConfigDto() {}
+  public DeduplicationRequestDto() {}
 
-  public DeduplicationConfigDto(String userId, List<String> columns) {
+  public DeduplicationRequestDto(String userId, List<String> columns) {
     this.userId = userId;
     this.columns = columns;
   }

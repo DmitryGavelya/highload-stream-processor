@@ -1,12 +1,23 @@
 FROM eclipse-temurin:21-jdk-jammy
+
 WORKDIR /app
 
-COPY pom.xml .
+# Копируем Maven wrapper и даем права
 COPY mvnw .
 COPY .mvn ./.mvn
-RUN ./mvnw dependency:go-offline
+RUN chmod +x mvnw
 
+# Копируем pom.xml
+COPY pom.xml .
+
+# Скачиваем только зависимости для компиляции (быстрее и меньше)
+RUN ./mvnw dependency:resolve
+
+# Копируем исходный код
 COPY src ./src
+
+# Собираем приложение
 RUN ./mvnw clean package -DskipTests
 
-CMD ["java", "-jar", "target/highloadstreamprocessor-0.0.1-SNAPSHOT.jar"]
+# Запускаем приложение
+CMD ["java", "-jar", "target/highloadstreamprocessor-1.0-SNAPSHOT.jar"]
