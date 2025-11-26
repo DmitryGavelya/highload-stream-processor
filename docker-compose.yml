@@ -1,7 +1,18 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17.6
     ports:
-      - "8080:8080"
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: 'development_password'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: filter
