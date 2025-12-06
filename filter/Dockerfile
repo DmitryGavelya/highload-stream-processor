@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21-jdk-jammy
-WORKDIR /app
+WORKDIR /filter
 
 COPY pom.xml .
 COPY mvnw .

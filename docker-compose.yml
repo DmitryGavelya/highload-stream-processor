@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    build: filter
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
       SPRING_DATASOURCE_USERNAME: postgres
