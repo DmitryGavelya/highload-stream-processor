@@ -3,9 +3,9 @@ package org.hsse.highloadstreamprocessor.filter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class FilterServiceApplication {
   public static void main(String[] args) {
-//    SpringApplication.run(FilterServiceApplication.class, args);
+    SpringApplication.run(FilterServiceApplication.class, args);
   }
 }

@@ -1,0 +1,42 @@
+spring:
+  application.name: Highload Stream Proccessor Enrichment
+
+  data:
+    mongodb:
+      uri: mongodb://mongo:development_password@localhost:27017/enrichment?authSource=admin
+      host: ${SPRING_DATA_MONGODB_HOST:enrichment-db}
+      port: ${SPRING_DATA_MONGODB_PORT:27017}
+      database: ${SPRING_DATA_MONGODB_DATABASE:enrichment}
+      username: ${SPRING_DATA_MONGODB_USERNAME:mongo}
+      password: ${SPRING_DATA_MONGODB_PASSWORD:development_password}
+      authentication-database: ${SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE:admin}
+
+  kafka:
+    admin:
+      fail-fast: false
+
+    consumer:
+      group-id: enrichment_service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: true
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+
+    admin.auto-create: true
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+
+enrichment:
+  listen-to: enrichment-source
+  send-to: enrichment-data
+
+mongock:
+  migration-scan-package: org.hsse.highloadstreamprocessor.enrichment.migration
+  enabled: true
+
+server:
+  port: 8080
