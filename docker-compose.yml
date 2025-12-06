@@ -6,6 +6,9 @@ services:
     ports:
       - "8080:8080"
     environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
       SPRING_DATA_MONGODB_URI: mongodb://mongo:development_password@enrichment-db:27017/enrichment?authSource=admin
       SPRING_DATA_MONGODB_HOST: enrichment-db
       SPRING_DATA_MONGODB_PORT: 27017
@@ -17,9 +20,21 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - kafka
+      - db
       - enrichment-db
     networks:
-      - enrichment-network
+      - internal-network
+
+  db:
+    image: postgres:17.6
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: 'development_password'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: filter
+    networks:
+      - internal-network
 
   enrichment-db:
     image: mongo:4.4 # У вас может не работать, придется подбирать иную версию MongoDB
@@ -31,9 +46,9 @@ services:
       MONGO_INITDB_DATABASE: enrichment
     volumes:
       - mongodb_data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      # - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
-      - enrichment-network
+      - internal-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
@@ -41,7 +56,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - enrichment-network
+      - internal-network
 
   kafka:
     image: confluentinc/cp-kafka:7.0.1
@@ -61,10 +76,10 @@ services:
       - "9092:9092"
       - "29092:29092"
     networks:
-      - enrichment-network
+      - internal-network
 
 networks:
-  enrichment-network:
+  internal-network:
     driver: bridge
 
 volumes:
