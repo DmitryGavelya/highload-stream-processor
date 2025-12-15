@@ -10,6 +10,8 @@
       enable-auto-commit: true
     admin.auto-create: true
 
+  flyway.enabled: false
+
 filter:
   listen-to: source
   send-to: filtered

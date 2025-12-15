@@ -8,8 +8,10 @@ services:
 
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
-      - kafka
-      - db
+      kafka:
+        condition: service_started
+      db:
+        condition: service_healthy
     networks:
       - internal-network
 
@@ -26,9 +28,24 @@ services:
 
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
-      - kafka
-      - db
-      - enrichment-db
+      kafka:
+        condition: service_started
+      db:
+        condition: service_healthy
+      enrichment-db:
+        condition: service_started
+    networks:
+      - internal-network
+
+  configurator:
+    build: configurator
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - internal-network
 
@@ -40,6 +57,12 @@ services:
       POSTGRES_PASSWORD: 'development_password'
       POSTGRES_USER: 'postgres'
       POSTGRES_DB: filter
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - internal-network
 

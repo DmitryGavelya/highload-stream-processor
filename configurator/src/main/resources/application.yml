@@ -6,7 +6,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop  # Проверяем, что схема соответствует Entity
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -14,7 +14,7 @@ spring:
         format_sql: true
 
   flyway:
-    enabled: false
+    enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true  # Автоматически создает baseline для существующих БД
 
