@@ -8,13 +8,13 @@ COPY .mvn ./.mvn
 RUN chmod +x mvnw
 
 # Копируем pom.xml
-COPY pom.xml .
+COPY configurator/pom.xml .
 
 # Скачиваем только зависимости для компиляции (быстрее и меньше)
 RUN ./mvnw dependency:resolve
 
 # Копируем исходный код
-COPY src ./src
+COPY configurator/src ./src
 
 # Собираем приложение
 RUN ./mvnw clean package -DskipTests

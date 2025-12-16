@@ -1,6 +1,8 @@
 services:
   filter:
-    build: filter
+    build:
+      context: .
+      dockerfile: filter/Dockerfile
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
       SPRING_DATASOURCE_USERNAME: postgres
@@ -16,7 +18,9 @@ services:
       - internal-network
 
   enrichment:
-    build: enrichment
+    build:
+      context: .
+      dockerfile: enrichment/Dockerfile
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:development_password@enrichment-db:27017/enrichment?authSource=admin
       # SPRING_DATA_MONGODB_HOST: enrichment-db
@@ -38,7 +42,9 @@ services:
       - internal-network
 
   configurator:
-    build: configurator
+    build:
+      context: .
+      dockerfile: configurator/Dockerfile
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/filter
       SPRING_DATASOURCE_USERNAME: postgres
