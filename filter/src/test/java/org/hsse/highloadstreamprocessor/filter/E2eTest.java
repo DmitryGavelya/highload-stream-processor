@@ -4,17 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.hsse.highloadstreamprocessor.filter.db.BoolFilterEntity;
-import org.hsse.highloadstreamprocessor.filter.db.BoolFilterRepository;
-import org.hsse.highloadstreamprocessor.filter.db.IntFilterEntity;
-import org.hsse.highloadstreamprocessor.filter.db.IntFilterRepository;
-import org.hsse.highloadstreamprocessor.filter.db.StringFilterEntity;
-import org.hsse.highloadstreamprocessor.filter.db.StringFilterRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,29 +31,32 @@ public class E2eTest extends DatabaseSuit {
   private ObjectMapper objectMapper;
 
   @Autowired
-  private IntFilterRepository intFilterRepository;
+  private FilterRepository repository;
 
   @Autowired
-  private StringFilterRepository stringFilterRepository;
-
-  @Autowired
-  private BoolFilterRepository boolFilterRepository;
+  private JdbcTemplate jdbcTemplate;
 
   @Autowired
   private KafkaTemplate<String, String> kafkaTemplate;
 
   @BeforeEach
   void addRules() {
-    intFilterRepository.save(new IntFilterEntity("int_field", 15));
-    stringFilterRepository.save(new StringFilterEntity("string_field", "test"));
-    boolFilterRepository.save(new BoolFilterEntity("bool_field", true));
+    jdbcTemplate.update("CREATE TABLE IF NOT EXISTS filters (filter JSONB)");
+    jdbcTemplate.update("INSERT INTO filters VALUES (?::jsonb)", """
+            {
+              "type": "and",
+              "children": [
+                { "type": "=", "field": "int_field", "value": 15 },
+                { "type": "=", "field": "string_field", "value": "test" },
+                { "type": "=", "field": "bool_field", "value": true }
+              ]
+            }
+            """);
   }
 
   @AfterEach
   void removeRules() {
-    intFilterRepository.deleteAll();
-    stringFilterRepository.deleteAll();
-    boolFilterRepository.deleteAll();
+    jdbcTemplate.update("DELETE FROM filters");
   }
 
   @Test

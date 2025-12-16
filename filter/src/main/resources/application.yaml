@@ -1,16 +1,13 @@
 ﻿spring:
   application.name: Highload Stream Proccessor
   jpa:
-    show_sql: true
-    properties.hibernate.format_sql: true
-    hibernate.ddl-auto: validate
+    enabled: false
+    hibernate.ddl-auto: none
   kafka:
     consumer:
       group-id: filter_service
       enable-auto-commit: true
     admin.auto-create: true
-
-  flyway.enabled: false
 
 filter:
   listen-to: source

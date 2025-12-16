@@ -1,6 +1,7 @@
 package org.hsse.highloadstreamprocessor.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -24,7 +25,7 @@ public class FilteredSender {
     this.filteredTopic = filteredTopic;
   }
 
-  public void sendMessage(Map<String, Object> message) {
+  public void sendMessage(JsonNode message) {
     try {
       CompletableFuture<SendResult<String, String>> future =
               kafkaTemplate.send(filteredTopic, objectMapper.writeValueAsString(message));

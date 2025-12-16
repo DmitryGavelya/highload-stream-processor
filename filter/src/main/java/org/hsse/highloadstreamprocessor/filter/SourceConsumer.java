@@ -1,7 +1,9 @@
 package org.hsse.highloadstreamprocessor.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,9 +19,6 @@ public class SourceConsumer {
 
   @KafkaListener(topics = {"${filter.listen-to}"})
   public void consumeMessage(String message) throws JsonProcessingException {
-    HashMap<String, Object> parsedMessage = objectMapper.readValue(message, new TypeReference<>() {
-    });
-
-    filterService.processMessage(parsedMessage);
+    filterService.processMessage(objectMapper.readTree(message));
   }
 }
