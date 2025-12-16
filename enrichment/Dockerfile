@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21-jdk-jammy
-WORKDIR /enrichment
+WORKDIR /app
 
 COPY enrichment/pom.xml .
 COPY mvnw .
@@ -9,4 +9,4 @@ RUN ./mvnw dependency:go-offline
 COPY enrichment/src ./src
 RUN ./mvnw clean package -DskipTests
 
-CMD ["java", "-jar", "target/highloadstreamprocessor-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/highloadstreamprocessorenrichment-0.0.1-SNAPSHOT.jar"]

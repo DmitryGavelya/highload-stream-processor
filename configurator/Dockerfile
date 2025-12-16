@@ -20,4 +20,4 @@ COPY configurator/src ./src
 RUN ./mvnw clean package -DskipTests
 
 # Запускаем приложение
-CMD ["java", "-jar", "target/highloadstreamprocessor-1.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/highloadstreamprocessorconfigurator-1.0-SNAPSHOT.jar"]

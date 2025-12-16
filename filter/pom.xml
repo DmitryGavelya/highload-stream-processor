@@ -12,7 +12,7 @@
     <groupId>org.hsse</groupId>
     <artifactId>highloadstreamprocessorfilter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Highload stream processor</name>
+    <name>Highload stream processor (filter service)</name>
     <url/>
     <licenses>
         <license/>

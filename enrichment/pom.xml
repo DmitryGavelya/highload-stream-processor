@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>org.hsse</groupId>
-    <artifactId>highloadstreamprocessor</artifactId>
+    <artifactId>highloadstreamprocessorenrichment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Highload stream processor</name>
+    <name>Highload stream processor (enrichment service)</name>
     <url/>
     <licenses>
         <license/>
