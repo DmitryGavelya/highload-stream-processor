@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/manager
+    url: jdbc:postgresql://localhost:5433/manager
     username: postgres
     password: development_password
 
@@ -18,8 +18,13 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true  # Автоматически создает baseline для существующих БД
 
-server:
+enrichment:
+  host: localhost
   port: 8080
+  api-trace: /api/enrichment
+
+server:
+  port: 8081
 
 logging:
   level:

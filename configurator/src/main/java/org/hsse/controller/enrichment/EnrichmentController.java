@@ -1,5 +1,6 @@
 package org.hsse.controller.enrichment;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.hsse.dto.DeduplicationRequestsDto;
 import org.hsse.dto.EnrichmentConfigDto;
@@ -62,5 +63,11 @@ public class EnrichmentController {
 
     boolean exists = enrichmentService.hasEnrichmentColumn(userId, columnName);
     return ResponseEntity.ok(exists);
+  }
+
+  @PostMapping("/load/{id}")
+    public ResponseEntity<Boolean> loadFromEnrichmentService(@PathVariable String id) throws JsonProcessingException {
+      boolean success = enrichmentService.getFromEnrichmentService(id);
+      return ResponseEntity.ok(success);
   }
 }
