@@ -1,1 +1,1 @@
-CREATE TABLE user_filters (filter JSONB NOT NULL);
+CREATE TABLE user_filters (user_id VARCHAR(255) PRIMARY KEY, filter JSONB NOT NULL);

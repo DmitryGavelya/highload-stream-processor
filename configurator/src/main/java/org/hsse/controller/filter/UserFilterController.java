@@ -4,7 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.hsse.dto.UserFilterDto;
 import org.hsse.service.filter.UserFilterService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Optional;
 
 @RestController
@@ -16,20 +23,19 @@ public class UserFilterController {
 
   @PutMapping("/{userId}")
   public ResponseEntity<Void> saveFilter(
-      @PathVariable String userId,
-      @RequestBody UserFilterDto filterDto) {
-
-    filterService.saveUserFilter(userId, filterDto);
+          @PathVariable String userId,
+          @RequestBody String filterJson) {
+    filterService.saveUserFilter(userId, new UserFilterDto(filterJson));
     return ResponseEntity.ok().build();
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<UserFilterDto> getFilter(@PathVariable String userId) {
+  public ResponseEntity<String> getFilter(@PathVariable String userId) {
     Optional<UserFilterDto> filterOpt = filterService.getUserFilter(userId);
-
     return filterOpt
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+            .map(UserFilterDto::getJson)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
   }
 
   @DeleteMapping("/{userId}")

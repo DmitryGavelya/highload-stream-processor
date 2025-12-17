@@ -1,21 +1,10 @@
 package org.hsse.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hsse.service.filter.FilterOperator;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class UserFilterDto {
-  private String field;
-  private FilterOperator operator;
-  private String value;
-
-  public UserFilterDto() {}
-
-  public UserFilterDto(String field, FilterOperator operator, String value) {
-    this.field = field;
-    this.operator = operator;
-    this.value = value;
-  }
+  private String json;
 }

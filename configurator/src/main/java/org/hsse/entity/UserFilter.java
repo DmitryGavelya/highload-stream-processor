@@ -1,9 +1,13 @@
 package org.hsse.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hsse.service.filter.FilterOperator;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "user_filters")
@@ -11,20 +15,10 @@ import org.hsse.service.filter.FilterOperator;
 @Setter
 public class UserFilter {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @Column(name = "user_id", nullable = false)
+  @Column(name = "user_id")
   private String userId;
 
-  @Column(name = "field", nullable = false)
-  private String field;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "operator", nullable = false)
-  private FilterOperator operator;
-
-  @Column(name = "value")
-  private String value;
-
+  @Column(name = "filter")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private String json;
 }

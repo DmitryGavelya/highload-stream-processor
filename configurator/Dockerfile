@@ -19,5 +19,7 @@ COPY configurator/src ./src
 # Собираем приложение
 RUN ./mvnw clean package -DskipTests
 
+EXPOSE 8080
+
 # Запускаем приложение
 CMD ["java", "-jar", "target/highloadstreamprocessorconfigurator-1.0-SNAPSHOT.jar"]
