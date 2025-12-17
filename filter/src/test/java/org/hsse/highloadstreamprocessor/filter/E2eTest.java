@@ -45,7 +45,7 @@ public class E2eTest extends DatabaseSuit {
     jdbcTemplate.update("INSERT INTO filters VALUES (?::jsonb)", """
             {
               "type": "and",
-              "children": [
+              "nested": [
                 { "type": "=", "field": "int_field", "value": 15 },
                 { "type": "=", "field": "string_field", "value": "test" },
                 { "type": "=", "field": "bool_field", "value": true }

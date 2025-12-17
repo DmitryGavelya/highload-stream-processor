@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record AndFilter(List<Filter> children) implements Filter {
+public record AndFilter(List<Filter> nested) implements Filter {
   @Override
   public boolean accept(@NotNull JsonNode message) {
-    return children.stream().allMatch(filter -> filter.accept(message));
+    return nested.stream().allMatch(filter -> filter.accept(message));
   }
 }
