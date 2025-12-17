@@ -15,6 +15,12 @@ public class TopicConfig {
   @Value("${spring.kafka.bootstrap-servers}")
   private String bootstrapServers;
 
+  @Value("${filter.listen-to}")
+  private String listenToTopicName;
+
+  @Value("${filter.send-to}")
+  private String sendToTopicName;
+
   @Bean
   public KafkaAdmin kafkaAdmin() {
     final Map<String, Object> config = new HashMap<>();
@@ -23,12 +29,12 @@ public class TopicConfig {
   }
 
   @Bean
-  public NewTopic topicToFilter() {
-    return new NewTopic("source", 1, (short) 1);
+  public NewTopic listenToTopic() {
+    return new NewTopic(listenToTopicName, 1, (short) 1);
   }
 
   @Bean
-  public NewTopic filteredTopic() {
-    return new NewTopic("filtered", 1, (short) 1);
+  public NewTopic sendToTopic() {
+    return new NewTopic(sendToTopicName, 1, (short) 1);
   }
 }

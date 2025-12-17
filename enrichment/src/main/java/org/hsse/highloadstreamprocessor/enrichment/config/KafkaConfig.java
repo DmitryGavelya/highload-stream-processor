@@ -14,9 +14,14 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConfig {
-
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Value("${enrichment.listen-to}")
+    private String listenToTopicName;
+
+    @Value("${enrichment.send-to}")
+    private String sendToTopicName;
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -26,12 +31,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic topicToEnrichment() {
-        return new NewTopic("enrichment-source", 1, (short) 1);
+    public NewTopic listenToTopic() {
+        return new NewTopic(listenToTopicName, 1, (short) 1);
     }
 
     @Bean
-    public NewTopic enrichmentTopic() {
-        return new NewTopic("enrichment-data", 1, (short) 1);
+    public NewTopic sendToTopic() {
+        return new NewTopic(sendToTopicName, 1, (short) 1);
     }
 }

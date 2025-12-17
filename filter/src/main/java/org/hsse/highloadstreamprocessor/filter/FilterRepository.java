@@ -14,7 +14,7 @@ public class FilterRepository {
   private final ObjectMapper objectMapper;
 
   public Filter loadFilter() throws JsonProcessingException {
-    final String sql = "SELECT * FROM filters";
+    final String sql = "SELECT filter FROM user_filters";
     final String json = jdbcTemplate.queryForObject(sql, String.class);
     return objectMapper.readValue(json, Filter.class);
   }
