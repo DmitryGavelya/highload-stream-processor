@@ -31,8 +31,8 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
 
 enrichment:
-  listen-to: enrichment-source
-  send-to: enrichment-data
+  listen-to: filtered
+  send-to: enriched
 
 mongock:
   migration-scan-package: org.hsse.highloadstreamprocessor.enrichment.migration
