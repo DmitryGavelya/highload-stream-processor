@@ -24,7 +24,7 @@ enrichment:
   api-trace: api/enrichment
 
 server:
-  port: 8081
+  port: 8080
 
 logging:
   level:
