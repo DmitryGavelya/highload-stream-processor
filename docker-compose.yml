@@ -17,6 +17,27 @@ services:
     networks:
       - internal-network
 
+  deduplication:
+    build:
+      context: .
+      dockerfile: deduplication/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hsp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      kafka:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - internal-network
+
   enrichment:
     build:
       context: .
@@ -106,6 +127,13 @@ services:
     ports:
       - "9092:9092"
       - "29092:29092"
+    networks:
+      - internal-network
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - '6379:6379'
     networks:
       - internal-network
 

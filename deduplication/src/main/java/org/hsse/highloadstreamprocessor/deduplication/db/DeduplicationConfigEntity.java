@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
-@Table(name = "deduplication_config")
+@Table(name = "user_deduplication")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,4 +22,3 @@ public class DeduplicationConfigEntity {
   @Column(name = "excluded_fields")
   String excludedFields; // JSON array stored as string, e.g. ["timestamp", "requestId"]
 }
-

@@ -19,6 +19,6 @@ public class UserDeduplication {
   private String userId;
   @Getter
   @Setter
-  @Column(name = "column_name", nullable = false)
+  @Column(name = "excluded_fields", nullable = false)
   private String columnName;
 }

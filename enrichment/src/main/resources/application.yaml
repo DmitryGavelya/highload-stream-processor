@@ -31,7 +31,7 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
 
 enrichment:
-  listen-to: filtered
+  listen-to: deduplicated
   send-to: enriched
 
 mongock:

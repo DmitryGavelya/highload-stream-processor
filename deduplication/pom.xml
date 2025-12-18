@@ -70,17 +70,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>10.15.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
-            <version>10.15.2</version>
-        </dependency>
-
         <!-- Redis для хранения недавних сообщений -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -183,4 +172,3 @@
     </build>
 
 </project>
-
