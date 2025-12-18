@@ -1,0 +1,20 @@
+spring:
+  application.name: Highload Stream Processor - Deduplication
+  jpa:
+    show_sql: true
+    properties.hibernate.format_sql: true
+    hibernate.ddl-auto: validate
+  kafka:
+    consumer:
+      group-id: deduplication_service
+      enable-auto-commit: true
+    admin.auto-create: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+deduplication:
+  listen-to: filtered
+  send-to: deduplicated
+
