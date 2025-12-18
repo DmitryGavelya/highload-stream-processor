@@ -1,0 +1,21 @@
+spring:
+  application.name: Highload Stream Processor - Deduplication Test
+  jpa:
+    show_sql: true
+    properties.hibernate.format_sql: true
+    hibernate.ddl-auto: validate
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: deduplication_service_test
+      enable-auto-commit: true
+    admin.auto-create: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+deduplication:
+  listen-to: filtered
+  send-to: deduplicated
+

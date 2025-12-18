@@ -1,0 +1,14 @@
+﻿spring:
+  application.name: Highload Stream Proccessor
+  jpa:
+    enabled: false
+    hibernate.ddl-auto: none
+  kafka:
+    consumer:
+      group-id: filter_service
+      enable-auto-commit: true
+    admin.auto-create: true
+
+filter:
+  listen-to: source
+  send-to: filtered

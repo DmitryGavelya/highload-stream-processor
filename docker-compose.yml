@@ -1,0 +1,145 @@
+services:
+  filter:
+    build:
+      context: .
+      dockerfile: filter/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hsp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
+
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+      db:
+        condition: service_healthy
+    networks:
+      - internal-network
+
+  deduplication:
+    build:
+      context: .
+      dockerfile: deduplication/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hsp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      kafka:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - internal-network
+
+  enrichment:
+    build:
+      context: .
+      dockerfile: enrichment/Dockerfile
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:development_password@enrichment-db:27017/enrichment?authSource=admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+      db:
+        condition: service_healthy
+      enrichment-db:
+        condition: service_started
+    networks:
+      - internal-network
+
+  configurator:
+    build:
+      context: .
+      dockerfile: configurator/Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hsp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: development_password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal-network
+
+  db:
+    image: postgres:17.6
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: 'development_password'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: hsp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal-network
+
+  enrichment-db:
+    image: mongo:4.4 # У вас может не работать, придется подбирать иную версию MongoDB
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: development_password
+      MONGO_INITDB_DATABASE: enrichment
+    volumes:
+      - mongodb_data:/data/db
+      # - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - internal-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - internal-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: EXTERNAL
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - internal-network
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - '6379:6379'
+    networks:
+      - internal-network
+
+networks:
+  internal-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
