@@ -21,7 +21,7 @@ spring:
 enrichment:
   host: localhost
   port: 8080
-  api-trace: /api/enrichment
+  api-trace: api/enrichment
 
 server:
   port: 8081

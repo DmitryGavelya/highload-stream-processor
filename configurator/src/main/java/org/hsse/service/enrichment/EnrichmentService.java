@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,8 +71,7 @@ public class EnrichmentService {
     return enrichmentRepository.existsByUserIdAndColumnName(userId, columnName);
   }
 
-  @Transactional
-    public boolean getFromEnrichmentService(String originId) throws JsonProcessingException {
+    public String getFromEnrichmentService(String originId) throws JsonProcessingException {
       RestTemplate restTemplate = new RestTemplate();
       String url = String.format("http://%s:%s/%s/%s", enrichmentHost, enrichmentPort, enrichmentApiTrace, originId);
 
@@ -79,11 +79,20 @@ public class EnrichmentService {
 
       if (response.getStatusCode() == HttpStatus.OK) {
           ObjectMapper objectMapper = new ObjectMapper();
-          var resultMap = objectMapper.readValue(response.getBody(), Map.class);
-          addEnrichmentColumn(originId, resultMap.get("query_value").toString());
-          return true;
+          var responseMap = objectMapper.readValue(response.getBody(), Map.class);
+
+          Map<String, Object> resultMap = new HashMap<>();
+          List<String> columns = getEnrichmentColumns(originId);
+
+          for (String column : columns) {
+              if (responseMap.containsKey(column)) {
+                  resultMap.put(column, responseMap.get(column));
+              }
+          }
+
+          return objectMapper.writeValueAsString(resultMap);
       }
 
-      return false;
+      return "error";
   }
 }

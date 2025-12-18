@@ -65,9 +65,9 @@ public class EnrichmentController {
     return ResponseEntity.ok(exists);
   }
 
-  @PostMapping("/load/{id}")
-    public ResponseEntity<Boolean> loadFromEnrichmentService(@PathVariable String id) throws JsonProcessingException {
-      boolean success = enrichmentService.getFromEnrichmentService(id);
-      return ResponseEntity.ok(success);
+  @GetMapping("/load/{id}")
+    public ResponseEntity<String> loadFromEnrichmentService(@PathVariable String id) throws JsonProcessingException {
+      String jsonString = enrichmentService.getFromEnrichmentService(id);
+      return ResponseEntity.ok(jsonString);
   }
 }
