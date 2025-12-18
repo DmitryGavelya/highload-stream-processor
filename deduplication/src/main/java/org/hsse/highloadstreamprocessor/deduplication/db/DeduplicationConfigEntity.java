@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -17,7 +16,6 @@ public class DeduplicationConfigEntity {
   @Column(name = "user_id")
   String userId;
 
-  @NotNull
   @Column(name = "time_window_seconds", nullable = false)
   Integer timeWindowSeconds;
 

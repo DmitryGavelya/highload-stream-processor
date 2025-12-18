@@ -21,7 +21,10 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "spring.kafka.bootstrap-servers=localhost:9999",
+    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
+})
 @Testcontainers
 class DeduplicationServiceTest {
 

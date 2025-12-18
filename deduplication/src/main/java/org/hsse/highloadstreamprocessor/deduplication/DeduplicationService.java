@@ -1,4 +1,4 @@
-package main.java.org.hsse.highloadstreamprocessor.deduplication;
+package org.hsse.highloadstreamprocessor.deduplication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
